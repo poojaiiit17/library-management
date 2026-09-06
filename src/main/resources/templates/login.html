@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Library Management - Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="login-page">
+<div class="login-card">
+    <div class="brand">📚 Library Management</div>
+    <h1>Welcome Back</h1>
+    <p class="muted">Login to manage your library account</p>
+
+    <div th:if="${message}" class="alert error" th:text="${message}"></div>
+
+    <form method="post" action="/login">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Enter your email" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+
+        <button type="submit" class="btn primary full">Login</button>
+    </form>
+
+    <div class="demo-box">
+        <strong>Demo accounts</strong><br>
+        User: user@library.com / user123<br>
+        Admin: admin@library.com / admin123
+    </div>
+</div>
+</body>
+</html>
