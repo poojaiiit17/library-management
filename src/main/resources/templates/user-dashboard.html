@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - Library</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">📚 Library Management</div>
+    <div class="top-actions"><span th:text="'Hello, ' + ${user.name}"></span><a href="/logout">Logout</a></div>
+</header>
+
+<main class="container">
+    <div th:if="${session.message}" class="alert" th:text="${session.message}"></div>
+
+    <section class="hero">
+        <div>
+            <h1>My Library</h1>
+            <p>Issue books, return books, and see what is currently available.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>My Issued Books</h2>
+        <div th:if="${#lists.isEmpty(issuedBooks)}" class="empty">You have no issued books.</div>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(issuedBooks)}">
+            <table>
+                <thead><tr><th>Book</th><th>Issue Date</th><th>Action</th></tr></thead>
+                <tbody>
+                <tr th:each="issue : ${issuedBooks}">
+                    <td th:text="${issue.bookTitle}"></td>
+                    <td th:text="${issue.issueDate}"></td>
+                    <td>
+                        <form method="post" action="/return-book">
+                            <input type="hidden" name="issueId" th:value="${issue.issueId}">
+                            <button class="btn danger" type="submit">Return</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-heading"><h2>Available Books</h2><span class="badge" th:text="${#lists.size(availableBooks)} + ' titles'"></span></div>
+        <div class="book-grid">
+            <div class="book-card" th:each="book : ${availableBooks}">
+                <div class="book-icon">📖</div>
+                <h3 th:text="${book.title}"></h3>
+                <p class="author" th:text="'by ' + ${book.author}"></p>
+                <p th:text="${book.category}"></p>
+                <p class="copies" th:text="${book.availableCopies} + ' of ' + ${book.totalCopies} + ' copies available'"></p>
+                <form method="post" action="/issue-book">
+                    <input type="hidden" name="bookId" th:value="${book.bookId}">
+                    <button class="btn primary full" type="submit">Issue Book</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
