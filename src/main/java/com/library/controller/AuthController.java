@@ -14,10 +14,13 @@ public class AuthController {
     private final UserService userService = new UserService();
 
     @GetMapping({"/", "/login"})
-    public String loginPage() { return "login"; }
+    public String loginPage() {
+        return "login";
+    }
 
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password,
+    public String login(@RequestParam("email") String email,
+                        @RequestParam("password") String password,
                         HttpSession session, Model model) {
         User user = userService.login(email, password);
         if (user == null) {
@@ -25,7 +28,9 @@ public class AuthController {
             return "login";
         }
         session.setAttribute("user", user);
-        if ("ADMIN".equals(user.getRole())) return "redirect:/admin-dashboard";
+        if ("ADMIN".equals(user.getRole())) {
+            return "redirect:/admin-dashboard";
+        }
         return "redirect:/user-dashboard";
     }
 
