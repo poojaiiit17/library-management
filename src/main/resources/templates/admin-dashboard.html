@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Library</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">📚 Library Management <span class="admin-label">ADMIN</span></div>
+    <div class="top-actions"><a href="/logout">Logout</a></div>
+</header>
+
+<main class="container">
+    <div th:if="${session.message}" class="alert" th:text="${session.message}"></div>
+
+    <section class="hero">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>Manage the books available in your library.</p>
+        </div>
+    </section>
+
+    <section class="section add-section">
+        <h2>Add New Book</h2>
+        <form method="post" action="/admin/add-book" class="book-form">
+            <div><label>Book Title</label><input name="title" placeholder="Enter book title" required></div>
+            <div><label>Author</label><input name="author" placeholder="Enter author name" required></div>
+            <div><label>Category</label><input name="category" placeholder="e.g. Programming"></div>
+            <div><label>Copies</label><input type="number" name="copies" min="1" value="1" required></div>
+            <div class="form-button"><button class="btn primary" type="submit">+ Add Book</button></div>
+        </form>
+    </section>
+
+    <section class="section">
+        <div class="section-heading"><h2>All Books</h2><span class="badge" th:text="${#lists.size(books)} + ' titles'"></span></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>ID</th><th>Title</th><th>Author</th><th>Category</th><th>Total</th><th>Available</th><th>Action</th></tr></thead>
+                <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.bookId}"></td>
+                    <td th:text="${book.title}"></td>
+                    <td th:text="${book.author}"></td>
+                    <td th:text="${book.category}"></td>
+                    <td th:text="${book.totalCopies}"></td>
+                    <td th:text="${book.availableCopies}"></td>
+                    <td>
+                        <form method="post" action="/admin/remove-book">
+                            <input type="hidden" name="bookId" th:value="${book.bookId}">
+                            <button class="btn danger" type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(books)}"><td colspan="7" class="empty">No books in the library.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="hint">A book can only be removed when all of its copies have been returned.</p>
+    </section>
+</main>
+</body>
+</html>
